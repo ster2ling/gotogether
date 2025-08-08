@@ -18,7 +18,7 @@ export default function CallToAction() {
             {/* Center - Text */}
             <div className="text-center flex-1">
               <h3 className="text-xl font-medium mb-2">
-                Don't Know Which Destination To Choose?
+                Don&apos;t Know Which Destination To Choose?
               </h3>
               <p className="text-3xl md:text-4xl font-bold">
                 Call Us 

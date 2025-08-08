@@ -13,7 +13,7 @@ export default function Home() {
   const { isAuthenticated, signup } = useAuth()
   const [showSignupOverlay, setShowSignupOverlay] = useState(false)
 
-  const handleSignupSuccess = (userData: any) => {
+  const handleSignupSuccess = (userData: { firstName: string; lastName: string; email: string }) => {
     signup({
       id: '1',
       firstName: userData.firstName,

@@ -7,7 +7,7 @@ import DatePicker from './DatePicker'
 interface SignupOverlayProps {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (userData: any) => void
+  onSuccess?: (userData: { firstName: string; lastName: string; email: string; password: string; confirmPassword: string; birthDate: string }) => void
 }
 
 export default function SignupOverlay({ isOpen, onClose, onSuccess }: SignupOverlayProps) {

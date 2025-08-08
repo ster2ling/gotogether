@@ -10,7 +10,7 @@ export default function SearchBar() {
   const [selectedGuests, setSelectedGuests] = useState('2 guests, 1 room')
   const [showLocationDropdown, setShowLocationDropdown] = useState(false)
   const [locationSearch, setLocationSearch] = useState('')
-  const [searchResults, setSearchResults] = useState<any[]>([])
+  const [searchResults, setSearchResults] = useState<{ description: string }[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [customGuests, setCustomGuests] = useState({ guests: 2, rooms: 1 })
   const [showGuestsDropdown, setShowGuestsDropdown] = useState(false)

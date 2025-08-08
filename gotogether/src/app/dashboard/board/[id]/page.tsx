@@ -62,6 +62,13 @@ interface AISuggestion {
   action?: string
 }
 
+// Extended CSS style declaration for vendor-prefixed properties
+interface ExtendedCSSStyleDeclaration extends CSSStyleDeclaration {
+  webkitUserSelect: string
+  mozUserSelect: string
+  msUserSelect: string
+}
+
 const mockCards: Card[] = [
   {
     id: '1',
@@ -264,13 +271,13 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
           const parsedState = JSON.parse(savedState)
           
           // Convert date strings back to Date objects for cards
-          const cardsWithDates = (parsedState.cards || mockCards).map((card: any) => ({
+          const cardsWithDates = (parsedState.cards || mockCards).map((card: Card) => ({
             ...card,
             createdAt: card.createdAt ? new Date(card.createdAt) : new Date()
           }))
           
           // Convert date strings back to Date objects for messages
-          const messagesWithDates = (parsedState.messages || mockMessages).map((message: any) => ({
+          const messagesWithDates = (parsedState.messages || mockMessages).map((message: Message) => ({
             ...message,
             timestamp: message.timestamp ? new Date(message.timestamp) : new Date()
           }))
@@ -380,9 +387,9 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
       // Prevent text selection during drag
       e.preventDefault()
       document.body.style.userSelect = 'none'
-      ;(document.body.style as any).webkitUserSelect = 'none'
-      ;(document.body.style as any).mozUserSelect = 'none'
-      ;(document.body.style as any).msUserSelect = 'none'
+      ;(document.body.style as ExtendedCSSStyleDeclaration).webkitUserSelect = 'none'
+      ;(document.body.style as ExtendedCSSStyleDeclaration).mozUserSelect = 'none'
+      ;(document.body.style as ExtendedCSSStyleDeclaration).msUserSelect = 'none'
       
       const rect = canvasRef.current.getBoundingClientRect()
       setDraggedCard(cardId)
@@ -416,9 +423,9 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
     
     // Restore text selection
     document.body.style.userSelect = ''
-    ;(document.body.style as any).webkitUserSelect = ''
-    ;(document.body.style as any).mozUserSelect = ''
-    ;(document.body.style as any).msUserSelect = ''
+    ;(document.body.style as ExtendedCSSStyleDeclaration).webkitUserSelect = ''
+    ;(document.body.style as ExtendedCSSStyleDeclaration).mozUserSelect = ''
+    ;(document.body.style as ExtendedCSSStyleDeclaration).msUserSelect = ''
   }, [])
 
   useEffect(() => {

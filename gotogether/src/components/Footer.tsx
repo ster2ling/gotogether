@@ -1,14 +1,17 @@
 'use client'
 
 import { Phone, Mail, MapPin } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Footer() {
   return (
     <footer className="flex flex-col items-center">
       {/* Banner Image */}
-      <img 
+      <Image 
         src="https://api.builder.io/api/v1/image/assets/TEMP/59b0e37ede2732c824b79b34579fcff22b42d0c5?width=2880" 
         alt="Banner" 
+        width={2880}
+        height={139}
         className="w-full h-[139px]"
       />
       

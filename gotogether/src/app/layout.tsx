@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GoTogether - Collaborative Travel Planning",
   description: "Plan amazing trips with friends and family using AI-powered collaborative tools",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

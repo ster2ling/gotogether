@@ -14,7 +14,7 @@ export default function SearchBar() {
   const [isSearching, setIsSearching] = useState(false)
   const [customGuests, setCustomGuests] = useState({ guests: 2, rooms: 1 })
   const [showGuestsDropdown, setShowGuestsDropdown] = useState(false)
-  const searchTimeoutRef = useRef<NodeJS.Timeout>()
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const dateInputRef = useRef<HTMLInputElement>(null)
 
   // Google Places API Key - You'll need to get this from Google Cloud Console

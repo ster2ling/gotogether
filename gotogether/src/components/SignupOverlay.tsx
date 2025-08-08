@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, X, Calendar } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, X } from 'lucide-react'
 import DatePicker from './DatePicker'
 
 interface SignupOverlayProps {

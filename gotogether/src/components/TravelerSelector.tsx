@@ -82,10 +82,7 @@ export default function TravelerSelector({
     onChange(resetValue)
   }
 
-  const formatDisplayText = () => {
-    const { rooms, adults, children } = value
-    return `${adults} adult${adults !== 1 ? 's' : ''}, ${children} child${children !== 1 ? 'ren' : ''}, ${rooms} room${rooms !== 1 ? 's' : ''}`
-  }
+
 
   const CounterRow = ({ 
     type, 

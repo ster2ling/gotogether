@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Calendar } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { useState } from 'react'
 import DateRangePicker from './DateRangePicker'
 import LocationSearch from './LocationSearch'

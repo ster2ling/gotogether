@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { MapPin, Search, Globe, Building2, Mountain, Flag } from 'lucide-react'
+import { Globe, Building2, Mountain, Flag } from 'lucide-react'
 import { searchPlaces } from '@/services/placesApi'
 
 interface LocationSuggestion {
@@ -210,7 +210,7 @@ export default function LocationSearch({
                 Enter a city, region, or country
               </div>
               <div className="text-sm text-orange-700 mt-1">
-                We couldn't find a close match.
+                We couldn&apos;t find a close match.
               </div>
             </div>
           </div>

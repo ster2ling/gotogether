@@ -18,7 +18,7 @@ export default function SearchBar() {
   const dateInputRef = useRef<HTMLInputElement>(null)
 
   // Google Places API Key - You'll need to get this from Google Cloud Console
-  const GOOGLE_PLACES_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY || 'YOUR_API_KEY_HERE'
+  // const GOOGLE_PLACES_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY || 'YOUR_API_KEY_HERE'
 
   const searchLocations = async (query: string) => {
     if (!query.trim() || query.length < 2) {

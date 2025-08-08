@@ -5,15 +5,12 @@ import { useRouter } from 'next/navigation'
 import { 
   ArrowLeft, 
   Plus, 
-  Users, 
-  MapPin, 
   DollarSign,
   Waves,
   Mountain,
   Building2,
   Plane,
-  Car,
-  Train
+  Car
 } from 'lucide-react'
 import DateRangePicker from '@/components/DateRangePicker'
 

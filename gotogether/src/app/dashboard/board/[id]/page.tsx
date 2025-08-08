@@ -9,13 +9,11 @@ import {
   Settings, 
   Share2, 
   MapPin, 
-  Calendar, 
   DollarSign,
   Plane,
   Hotel,
   Utensils,
   Camera,
-  Car,
   MoreHorizontal,
   Edit,
   Trash2,
@@ -23,9 +21,7 @@ import {
   Star,
   Send,
   X,
-  Save,
-  Check,
-  AlertCircle
+  Check
 } from 'lucide-react'
 
 interface Card {
@@ -170,7 +166,7 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
   const [searchQuery, setSearchQuery] = useState('')
   const [messages, setMessages] = useState<Message[]>(mockMessages)
   const [newMessage, setNewMessage] = useState('')
-  const [aiSuggestions, setAiSuggestions] = useState<AISuggestion[]>(mockAISuggestions)
+  const [aiSuggestions] = useState<AISuggestion[]>(mockAISuggestions)
   const [draggedCard, setDraggedCard] = useState<string | null>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
@@ -207,6 +203,11 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n !== newNotification))
     }, 3000)
+  }
+
+  const handleCardDelete = (cardId: string) => {
+    setCards(cards.filter(card => card.id !== cardId))
+    setSelectedCard(null)
   }
 
   // Enhanced AI assistant interactions
@@ -260,7 +261,7 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [selectedCard, showAddMenu])
+  }, [selectedCard, showAddMenu, handleCardDelete])
 
   // Load board state from localStorage on mount
   useEffect(() => {
@@ -330,11 +331,6 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
   const handleCardClick = (cardId: string) => {
     setSelectedCard(selectedCard === cardId ? null : cardId)
     addNotification(`Selected card: ${cards.find(c => c.id === cardId)?.title}`)
-  }
-
-  const handleCardDelete = (cardId: string) => {
-    setCards(cards.filter(card => card.id !== cardId))
-    setSelectedCard(null)
   }
 
   const handleCardDuplicate = (cardId: string) => {
@@ -543,8 +539,8 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
               <span>•</span>
               <span>Last updated {formatTimeAgo(cards[0]?.createdAt || new Date())}</span>
             </div>
-            <div className="flex items-center space-x-1">
-              {collaborators.map((collaborator, index) => (
+                         <div className="flex items-center space-x-1">
+               {collaborators.map((collaborator) => (
                 <div
                   key={collaborator.name}
                   className={`w-6 h-6 rounded-full ${collaborator.color} flex items-center justify-center relative`}

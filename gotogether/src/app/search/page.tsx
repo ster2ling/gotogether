@@ -1,6 +1,6 @@
 'use client'
 
-import { Search, Calendar, Filter, Plus, Building, Star, ThumbsUp } from 'lucide-react'
+import { Search, Filter, Plus, Building, Star, ThumbsUp } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -25,8 +25,6 @@ export default function SearchPage() {
     adults: 2,
     children: 0
   })
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [showFilters, setShowFilters] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 

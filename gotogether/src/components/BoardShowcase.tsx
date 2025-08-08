@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { Users, MessageSquare, Calendar, MapPin, Plus, CheckCircle, ArrowRight, Star, Clock, MessageCircle, Move, MoreHorizontal, Edit3, Trash2, Copy, Share2, MapPin as MapPinIcon, Building, Camera, Utensils, Plane } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Users, Plus, Star, MessageCircle, Move, MoreHorizontal, Edit3, Trash2, Copy, Share2, MapPin as MapPinIcon, Building, Camera, Utensils, Plane } from 'lucide-react'
 
 interface DraggableNode {
   id: string

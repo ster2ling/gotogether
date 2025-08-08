@@ -25,7 +25,6 @@ export default function SearchPage() {
     adults: 2,
     children: 0
   })
-  const [hasSearched, setHasSearched] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const handleTestBypass = () => {
@@ -137,126 +136,113 @@ export default function SearchPage() {
         </div>
 
         {/* Filters and Results */}
-        {hasSearched ? (
-          <>
-            {/* Filters */}
-            <div className="p-4 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                  {/* Price Filter */}
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-700">Price $89 - $2,294</span>
-                    <div className="w-32 h-2 bg-gray-200 rounded-full relative">
-                      <div className="absolute left-0 top-0 w-1/3 h-full bg-gray-400 rounded-full"></div>
-                      <div className="absolute left-1/3 top-0 w-1 h-4 bg-black rounded-full -mt-1"></div>
-                      <div className="absolute left-2/3 top-0 w-1 h-4 bg-black rounded-full -mt-1"></div>
-                    </div>
-                  </div>
-                  
-                  {/* Filter Buttons */}
-                  <div className="flex gap-2">
-                    <button className="flex items-center gap-1 px-3 py-1 text-gray-700 hover:text-gray-900 transition-colors">
-                      <Building className="h-4 w-4" />
-                      <span className="text-xs font-medium">Property type</span>
-                    </button>
-                    <button className="flex items-center gap-1 px-3 py-1 text-gray-700 hover:text-gray-900 transition-colors">
-                      <Star className="h-4 w-4" />
-                      <span className="text-xs font-medium">Hotel class</span>
-                    </button>
-                    <button className="flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded">
-                      <ThumbsUp className="h-4 w-4" />
-                      <span className="text-xs font-medium">Rated 8+</span>
-                    </button>
-                    <button className="flex items-center gap-1 px-3 py-1 text-gray-700 hover:text-gray-900 transition-colors relative">
-                      <Filter className="h-4 w-4" />
-                      <span className="text-xs font-medium">All</span>
-                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">1</div>
-                    </button>
-                  </div>
+        {/* Filters */}
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-6">
+              {/* Price Filter */}
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-700">Price $89 - $2,294</span>
+                <div className="w-32 h-2 bg-gray-200 rounded-full relative">
+                  <div className="absolute left-0 top-0 w-1/3 h-full bg-gray-400 rounded-full"></div>
+                  <div className="absolute left-1/3 top-0 w-1 h-4 bg-black rounded-full -mt-1"></div>
+                  <div className="absolute left-2/3 top-0 w-1 h-4 bg-black rounded-full -mt-1"></div>
                 </div>
               </div>
-            </div>
-
-            {/* Results */}
-            <div className="flex-1 overflow-y-auto">
-              <div className="p-4">
-                <div className="text-sm text-gray-600 mb-4">180 results</div>
-                
-                {/* Result Items */}
-                <div className="space-y-4">
-                  {/* Beach Haven */}
-                  <div className="flex gap-3 p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
-                    <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">Beach Haven 1</h3>
-                      <p className="text-xs text-gray-600 mb-1">Guest favorite • 6 years hosting • Private room</p>
-                      <p className="text-xs text-gray-600 mb-2">1 bedroom • 1 shared bath</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-gray-900">$75</span>
-                          <span className="text-xs text-gray-500">Total $300</span>
-                        </div>
-                        <button className="flex items-center gap-1 px-2 py-1 bg-teal-600 text-white text-xs rounded hover:bg-teal-700 transition-colors">
-                          <Plus className="h-3 w-3" />
-                          Add
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Lakeside Escape */}
-                  <div className="flex gap-3 p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
-                    <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">Lakeside Escape at Joy Cove</h3>
-                      <p className="text-xs text-gray-600 mb-1">4 beds • 1 queen bed • 3 single beds</p>
-                      <p className="text-xs text-gray-600 mb-2">Guest favorite • Entire home</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-gray-900">$163</span>
-                          <span className="text-xs text-gray-500">Total $653</span>
-                        </div>
-                        <button className="flex items-center gap-1 px-2 py-1 bg-teal-600 text-white text-xs rounded hover:bg-teal-700 transition-colors">
-                          <Plus className="h-3 w-3" />
-                          Add
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Birmingham Tree House */}
-                  <div className="flex gap-3 p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
-                    <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">Birmingham Tree House Hotel</h3>
-                      <p className="text-xs text-gray-600 mb-1">3-star hotel • Free Wi-Fi • Free parking</p>
-                      <p className="text-xs text-gray-600 mb-2">Air conditioning • Pet-friendly • Fitness center</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-gray-900">$180</span>
-                          <span className="text-xs text-gray-500">Total $720</span>
-                        </div>
-                        <button className="flex items-center gap-1 px-2 py-1 bg-teal-600 text-white text-xs rounded hover:bg-teal-700 transition-colors">
-                          <Plus className="h-3 w-3" />
-                          Add
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              
+              {/* Filter Buttons */}
+              <div className="flex gap-2">
+                <button className="flex items-center gap-1 px-3 py-1 text-gray-700 hover:text-gray-900 transition-colors">
+                  <Building className="h-4 w-4" />
+                  <span className="text-xs font-medium">Property type</span>
+                </button>
+                <button className="flex items-center gap-1 px-3 py-1 text-gray-700 hover:text-gray-900 transition-colors">
+                  <Star className="h-4 w-4" />
+                  <span className="text-xs font-medium">Hotel class</span>
+                </button>
+                <button className="flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded">
+                  <ThumbsUp className="h-4 w-4" />
+                  <span className="text-xs font-medium">Rated 8+</span>
+                </button>
+                <button className="flex items-center gap-1 px-3 py-1 text-gray-700 hover:text-gray-900 transition-colors relative">
+                  <Filter className="h-4 w-4" />
+                  <span className="text-xs font-medium">All</span>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">1</div>
+                </button>
               </div>
-            </div>
-          </>
-        ) : (
-          /* Empty State */
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Search for your perfect trip</h3>
-              <p className="text-gray-600">Enter your destination, dates, and travelers to get started</p>
             </div>
           </div>
-        )}
+        </div>
+
+        {/* Results */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4">
+            <div className="text-sm text-gray-600 mb-4">180 results</div>
+            
+            {/* Result Items */}
+            <div className="space-y-4">
+              {/* Beach Haven */}
+              <div className="flex gap-3 p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">Beach Haven 1</h3>
+                  <p className="text-xs text-gray-600 mb-1">Guest favorite • 6 years hosting • Private room</p>
+                  <p className="text-xs text-gray-600 mb-2">1 bedroom • 1 shared bath</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-gray-900">$75</span>
+                      <span className="text-xs text-gray-500">Total $300</span>
+                    </div>
+                    <button className="flex items-center gap-1 px-2 py-1 bg-teal-600 text-white text-xs rounded hover:bg-teal-700 transition-colors">
+                      <Plus className="h-3 w-3" />
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Lakeside Escape */}
+              <div className="flex gap-3 p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">Lakeside Escape at Joy Cove</h3>
+                  <p className="text-xs text-gray-600 mb-1">4 beds • 1 queen bed • 3 single beds</p>
+                  <p className="text-xs text-gray-600 mb-2">Guest favorite • Entire home</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-gray-900">$163</span>
+                      <span className="text-xs text-gray-500">Total $653</span>
+                    </div>
+                    <button className="flex items-center gap-1 px-2 py-1 bg-teal-600 text-white text-xs rounded hover:bg-teal-700 transition-colors">
+                      <Plus className="h-3 w-3" />
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Birmingham Tree House */}
+              <div className="flex gap-3 p-3 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                <div className="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0"></div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900">Birmingham Tree House Hotel</h3>
+                  <p className="text-xs text-gray-600 mb-1">3-star hotel • Free Wi-Fi • Free parking</p>
+                  <p className="text-xs text-gray-600 mb-2">Air conditioning • Pet-friendly • Fitness center</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-gray-900">$180</span>
+                      <span className="text-xs text-gray-500">Total $720</span>
+                    </div>
+                    <button className="flex items-center gap-1 px-2 py-1 bg-teal-600 text-white text-xs rounded hover:bg-teal-700 transition-colors">
+                      <Plus className="h-3 w-3" />
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Right Panel - Map */}

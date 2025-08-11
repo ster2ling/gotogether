@@ -4,11 +4,11 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext'
 import DatePicker from '@/components/DatePicker'
 
 export default function SignupPage() {
-  const { signup } = useAuth()
+  const { signUp } = useSupabaseAuth()
   const router = useRouter()
   const [formData, setFormData] = useState({
     firstName: '',
@@ -33,30 +33,28 @@ export default function SignupPage() {
     e.preventDefault()
     setIsLoading(true)
     
-    // TODO: Implement actual registration
-    console.log('Signup attempt:', formData)
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
-      
+    try {
       // Sign up the user
-      signup({
-        id: '1',
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email
-      })
+      const { error } = await signUp(formData.email, formData.password, formData.firstName, formData.lastName)
       
-      // Redirect to intended destination or dashboard
-      const redirectPath = sessionStorage.getItem('redirectAfterSignup')
-      if (redirectPath) {
-        sessionStorage.removeItem('redirectAfterSignup')
-        router.push(redirectPath)
+      if (error) {
+        console.error('Signup error:', error)
+        // Handle error (you might want to show an error message to the user)
       } else {
-        router.push('/dashboard')
+        // Redirect to intended destination or dashboard
+        const redirectPath = sessionStorage.getItem('redirectAfterSignup')
+        if (redirectPath) {
+          sessionStorage.removeItem('redirectAfterSignup')
+          router.push(redirectPath)
+        } else {
+          router.push('/dashboard')
+        }
       }
-    }, 1000)
+    } catch (error) {
+      console.error('Signup error:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

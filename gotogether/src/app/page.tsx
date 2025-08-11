@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
 import SearchSection from '@/components/SearchSection'
@@ -10,16 +10,12 @@ import Features from '@/components/Features'
 import SignupOverlay from '@/components/SignupOverlay'
 
 export default function Home() {
-  const { isAuthenticated, signup } = useAuth()
+  const { user, signUp } = useSupabaseAuth()
+  const isAuthenticated = !!user
   const [showSignupOverlay, setShowSignupOverlay] = useState(false)
 
-  const handleSignupSuccess = (userData: { firstName: string; lastName: string; email: string }) => {
-    signup({
-      id: '1',
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email
-    })
+  const handleSignupSuccess = async (userData: { firstName: string; lastName: string; email: string }) => {
+    await signUp(userData.email, 'password123', userData.firstName, userData.lastName)
   }
 
   const handleStartPlanning = () => {
@@ -31,13 +27,8 @@ export default function Home() {
     }
   }
 
-  const handleTestBypass = () => {
-    signup({
-      id: 'test-user',
-      firstName: 'Test',
-      lastName: 'User',
-      email: 'test@gotogether.com'
-    })
+  const handleTestBypass = async () => {
+    await signUp('test@gotogether.com', 'password123', 'Test', 'User')
   }
 
   return (

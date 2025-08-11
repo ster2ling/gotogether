@@ -2,7 +2,7 @@
 
 import { Search, Filter, Plus, Building, Star, ThumbsUp } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext'
 import { useRouter } from 'next/navigation'
 import DateRangePicker from '../../components/DateRangePicker'
 import LocationSearch from '../../components/LocationSearch'
@@ -15,7 +15,8 @@ interface TravelerData {
 }
 
 export default function SearchPage() {
-  const { isAuthenticated, signup } = useAuth()
+  const { user, signUp } = useSupabaseAuth()
+  const isAuthenticated = !!user
   const router = useRouter()
   const [location, setLocation] = useState('')
   const [startDate, setStartDate] = useState('')
@@ -27,13 +28,8 @@ export default function SearchPage() {
   })
   const [isLoading, setIsLoading] = useState(true)
 
-  const handleTestBypass = () => {
-    signup({
-      id: 'test-user',
-      firstName: 'Test',
-      lastName: 'User',
-      email: 'test@gotogether.com'
-    })
+  const handleTestBypass = async () => {
+    await signUp('test@gotogether.com', 'password123', 'Test', 'User')
   }
 
   useEffect(() => {

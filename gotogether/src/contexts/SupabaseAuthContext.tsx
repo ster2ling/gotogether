@@ -8,10 +8,10 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
-  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: AuthError | null }>
-  signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: AuthError | Error | null }>
+  signIn: (email: string, password: string) => Promise<{ error: AuthError | Error | null }>
   signOut: () => Promise<void>
-  resetPassword: (email: string) => Promise<{ error: AuthError | null }>
+  resetPassword: (email: string) => Promise<{ error: AuthError | Error | null }>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -22,6 +22,11 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false)
+      return
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -42,6 +47,10 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
   }, [])
 
   const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
+    if (!supabase) {
+      return { error: new Error('Supabase client not initialized') }
+    }
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -74,6 +83,10 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
   }
 
   const signIn = async (email: string, password: string) => {
+    if (!supabase) {
+      return { error: new Error('Supabase client not initialized') }
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -83,10 +96,15 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
   }
 
   const signOut = async () => {
+    if (!supabase) return
     await supabase.auth.signOut()
   }
 
   const resetPassword = async (email: string) => {
+    if (!supabase) {
+      return { error: new Error('Supabase client not initialized') }
+    }
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth/reset-password`,
     })

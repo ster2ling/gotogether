@@ -3,14 +3,15 @@
 import { Search } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext'
 
 interface HeaderProps {
   onSignupClick?: () => void
 }
 
 export default function Header({ onSignupClick }: HeaderProps) {
-  const { isAuthenticated, logout, signup } = useAuth()
+  const { user, signOut } = useSupabaseAuth()
+  const isAuthenticated = !!user
   const [activeNav, setActiveNav] = useState('Home')
   const [scrollY, setScrollY] = useState(0)
 
@@ -27,13 +28,9 @@ export default function Header({ onSignupClick }: HeaderProps) {
     { name: 'Contact', href: '/contact' }
   ]
 
-  const handleTestBypass = () => {
-    signup({
-      id: 'test-user',
-      firstName: 'Test',
-      lastName: 'User',
-      email: 'test@gotogether.com'
-    })
+  const handleTestBypass = async () => {
+    // For now, just redirect to signup page
+    window.location.href = '/auth/signup'
   }
 
   return (
@@ -159,7 +156,7 @@ export default function Header({ onSignupClick }: HeaderProps) {
                   Dashboard
                 </Link>
                 <button 
-                  onClick={logout}
+                  onClick={signOut}
                   className="text-xl font-normal text-gray-800 hover:text-teal-600 transition-all duration-500" 
                   style={{ 
                     fontFamily: 'Golos Text, -apple-system, Roboto, Helvetica, sans-serif',

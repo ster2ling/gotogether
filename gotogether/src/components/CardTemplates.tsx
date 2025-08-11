@@ -1,6 +1,6 @@
 'use client'
 
-import { MapPin, Hotel, Camera, Utensils, Plane, Car, Calendar, DollarSign, Star, Clock, Users, Wifi, Parking, Pool } from 'lucide-react'
+import { MapPin, Hotel, Camera, Utensils, Plane, Car, Calendar, DollarSign, Star, Clock, Users, Wifi, Car as Parking, Waves } from 'lucide-react'
 
 export interface CardTemplate {
   id: string
@@ -102,7 +102,7 @@ export const cardTemplates: CardTemplate[] = [
       checkIn: '3:00 PM',
       checkOut: '11:00 AM',
       guests: 2,
-      amenities: ['WiFi', 'Pool', 'Spa', 'Restaurant', 'Room Service', 'Gym']
+              amenities: ['WiFi', 'Waves', 'Spa', 'Restaurant', 'Room Service', 'Gym']
     }
   },
   {

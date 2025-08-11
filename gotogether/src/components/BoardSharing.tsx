@@ -65,7 +65,7 @@ export default function BoardSharing({ boardId, boardTitle, isOpen, onClose }: B
               </svg>
             </button>
           </div>
-          <p className="text-sm text-gray-600 mt-1">Share "{boardTitle}" with your team</p>
+          <p className="text-sm text-gray-600 mt-1">Share &quot;{boardTitle}&quot; with your team</p>
         </div>
 
         {/* Content */}

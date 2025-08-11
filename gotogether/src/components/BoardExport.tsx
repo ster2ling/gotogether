@@ -43,7 +43,7 @@ export default function BoardExport({ boardTitle, cards, isOpen, onClose }: Boar
               <X className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-sm text-gray-600 mt-1">Export "{boardTitle}" for offline use</p>
+          <p className="text-sm text-gray-600 mt-1">Export &quot;{boardTitle}&quot; for offline use</p>
         </div>
 
         {/* Content */}

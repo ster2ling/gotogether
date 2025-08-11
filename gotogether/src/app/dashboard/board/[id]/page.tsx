@@ -21,8 +21,14 @@ import {
   Star,
   Send,
   X,
-  Check
+  Check,
+  Download,
+  Sparkles
 } from 'lucide-react'
+import { cardTemplates, getTemplatesByType, type CardTemplate } from '@/components/CardTemplates'
+import RichTextEditor from '@/components/RichTextEditor'
+import BoardSharing from '@/components/BoardSharing'
+import BoardExport from '@/components/BoardExport'
 
 interface Card {
   id: string
@@ -182,6 +188,12 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
   ])
   const [notifications, setNotifications] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
+  
+  // New features state
+  const [showTemplateMenu, setShowTemplateMenu] = useState(false)
+  const [showSharing, setShowSharing] = useState(false)
+  const [showExport, setShowExport] = useState(false)
+  const [selectedTemplateType, setSelectedTemplateType] = useState<Card['type'] | null>(null)
 
   // Global error handler
   useEffect(() => {
@@ -325,6 +337,34 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
       createdAt: new Date()
     }
     setCards([...cards, newCard])
+    setShowAddMenu(false)
+  }
+
+  const handleAddCardFromTemplate = (template: CardTemplate) => {
+    const newCard: Card = {
+      id: Date.now().toString(),
+      type: template.type,
+      title: template.fields.title,
+      description: template.fields.description,
+      location: template.fields.location,
+      price: template.fields.price,
+      rating: template.fields.rating,
+      x: Math.random() * 400 + 100,
+      y: Math.random() * 300 + 100,
+      width: 256,
+      height: 200,
+      createdBy: 'You',
+      createdAt: new Date()
+    }
+    setCards([...cards, newCard])
+    setShowTemplateMenu(false)
+    setSelectedTemplateType(null)
+    addNotification(`Added ${template.title} template`)
+  }
+
+  const handleShowTemplates = (type: Card['type']) => {
+    setSelectedTemplateType(type)
+    setShowTemplateMenu(true)
     setShowAddMenu(false)
   }
 
@@ -586,8 +626,20 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
               <MessageSquare className="h-5 w-5" />
             </button>
             
-            <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+            <button 
+              onClick={() => setShowSharing(true)}
+              className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              title="Share board"
+            >
               <Share2 className="h-5 w-5" />
+            </button>
+            
+            <button 
+              onClick={() => setShowExport(true)}
+              className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              title="Export board"
+            >
+              <Download className="h-5 w-5" />
             </button>
             
             <button 
@@ -682,15 +734,17 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
                         placeholder="Title"
                       />
-                      <textarea
-                        id={`edit-description-${card.id}`}
-                        name={`edit-description-${card.id}`}
-                        value={editForm.description || ''}
-                        onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                        placeholder="Description"
-                        rows={3}
-                      />
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Description
+                        </label>
+                        <RichTextEditor
+                          value={editForm.description || ''}
+                          onChange={(value) => setEditForm({ ...editForm, description: value })}
+                          placeholder="Add a detailed description..."
+                          className="w-full"
+                        />
+                      </div>
                       <input
                         type="text"
                         id={`edit-location-${card.id}`}
@@ -729,7 +783,10 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
                   ) : (
                     <>
                       <h3 className="font-semibold text-gray-900 mb-1">{card.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{card.description}</p>
+                      <div 
+                        className="text-sm text-gray-600 mb-2 prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{ __html: card.description }}
+                      />
                       
                       <div className="space-y-1 text-xs text-gray-500">
                         {card.location && (
@@ -772,40 +829,75 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
               <div className="absolute bottom-full right-0 mb-2 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-white/20 p-2 min-w-48">
                 <div className="text-xs font-medium text-gray-500 px-3 py-2">Add to board</div>
                 <button
-                  onClick={() => handleAddCard('destination')}
+                  onClick={() => handleShowTemplates('destination')}
                   className="w-full flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded"
                 >
                   <MapPin className="h-4 w-4 mr-3 text-teal-500" />
                   Destination
                 </button>
                 <button
-                  onClick={() => handleAddCard('accommodation')}
+                  onClick={() => handleShowTemplates('accommodation')}
                   className="w-full flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded"
                 >
                   <Hotel className="h-4 w-4 mr-3 text-teal-600" />
                   Accommodation
                 </button>
                 <button
-                  onClick={() => handleAddCard('activity')}
+                  onClick={() => handleShowTemplates('activity')}
                   className="w-full flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded"
                 >
                   <Camera className="h-4 w-4 mr-3 text-teal-700" />
                   Activity
                 </button>
                 <button
-                  onClick={() => handleAddCard('restaurant')}
+                  onClick={() => handleShowTemplates('restaurant')}
                   className="w-full flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded"
                 >
                   <Utensils className="h-4 w-4 mr-3 text-teal-800" />
                   Restaurant
                 </button>
                 <button
-                  onClick={() => handleAddCard('transport')}
+                  onClick={() => handleShowTemplates('transport')}
                   className="w-full flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded"
                 >
                   <Plane className="h-4 w-4 mr-3 text-teal-900" />
                   Transport
                 </button>
+              </div>
+            )}
+
+            {/* Template Menu */}
+            {showTemplateMenu && selectedTemplateType && (
+              <div className="absolute bottom-full right-0 mb-2 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-white/20 p-3 min-w-64 max-h-96 overflow-y-auto">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="text-xs font-medium text-gray-500">Choose Template</div>
+                  <button
+                    onClick={() => {
+                      setShowTemplateMenu(false)
+                      setSelectedTemplateType(null)
+                    }}
+                    className="p-1 hover:bg-gray-100 rounded"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {getTemplatesByType(selectedTemplateType).map((template) => (
+                    <button
+                      key={template.id}
+                      onClick={() => handleAddCardFromTemplate(template)}
+                      className="w-full flex items-start p-2 text-left hover:bg-gray-50 rounded transition-colors"
+                    >
+                      <div className={`w-8 h-8 bg-gradient-to-br ${template.gradient} rounded-lg flex items-center justify-center text-white mr-3 flex-shrink-0`}>
+                        {template.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm text-gray-900">{template.title}</div>
+                        <div className="text-xs text-gray-500 mt-1">{template.description}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -928,6 +1020,22 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
           )}
         </div>
       </div>
+
+      {/* Board Sharing Modal */}
+      <BoardSharing
+        boardId={resolvedParams.id}
+        boardTitle="Summer Beach Trip"
+        isOpen={showSharing}
+        onClose={() => setShowSharing(false)}
+      />
+
+      {/* Board Export Modal */}
+      <BoardExport
+        boardTitle="Summer Beach Trip"
+        cards={cards}
+        isOpen={showExport}
+        onClose={() => setShowExport(false)}
+      />
     </div>
   )
 } 

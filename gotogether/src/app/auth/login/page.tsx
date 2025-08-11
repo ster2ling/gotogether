@@ -2,37 +2,83 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react'
+import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext'
 
 export default function LoginPage() {
+  const { signIn } = useSupabaseAuth()
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError('')
     
-    // TODO: Implement actual authentication
-    console.log('Login attempt:', { email, password })
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const { error } = await signIn(email, password)
+      
+      if (error) {
+        console.error('Login error:', error)
+        setError(error.message || 'Failed to sign in')
+      } else {
+        // Redirect to intended destination or dashboard
+        const redirectPath = sessionStorage.getItem('redirectAfterSignup')
+        if (redirectPath) {
+          sessionStorage.removeItem('redirectAfterSignup')
+          router.push(redirectPath)
+        } else {
+          router.push('/dashboard')
+        }
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      setError('An unexpected error occurred')
+    } finally {
       setIsLoading(false)
-      // TODO: Redirect to dashboard
-    }, 1000)
+    }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-          <p className="mt-2 text-gray-600">Sign in to your GoTogether account</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <Link 
+            href="/" 
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-teal-600 transition-colors mb-4"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="text-sm">Back to home</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Inter, -apple-system, Roboto, Helvetica, sans-serif' }}>
+            Welcome Back
+          </h1>
+          <p className="text-gray-600" style={{ fontFamily: 'Inter, -apple-system, Roboto, Helvetica, sans-serif' }}>
+            Sign in to your GoTogether account
+          </p>
         </div>
         
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        {/* Form Card */}
+        <div 
+          className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8"
+          style={{
+            backdropFilter: 'blur(10px)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.05)'
+          }}
+        >
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -106,7 +152,12 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white transition-all duration-500 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              style={{
+                background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
+                boxShadow: '0 8px 25px rgba(13, 148, 136, 0.3), 0 2px 8px rgba(13, 148, 136, 0.2)',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}
             >
               {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
@@ -115,12 +166,13 @@ export default function LoginPage() {
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Don&apos;t have an account?{' '}
-              <Link href="/auth/signup" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link href="/auth/signup" className="font-medium text-teal-600 hover:text-teal-700 transition-colors">
                 Sign up
               </Link>
             </p>
           </div>
         </form>
+        </div>
       </div>
     </div>
   )

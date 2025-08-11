@@ -513,48 +513,56 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-50 via-blue-50 to-teal-50 overflow-hidden">
       {/* Notifications */}
       {notifications.length > 0 && (
         <div className="fixed top-4 right-4 z-50 space-y-2">
           {notifications.map((notification, index) => (
             <div
               key={index}
-              className="bg-teal-600 text-white px-4 py-2 rounded-lg shadow-lg max-w-sm"
+              className="bg-white/90 backdrop-blur-xl text-gray-900 px-6 py-3 rounded-xl shadow-xl border border-white/20 max-w-sm"
             >
-              {notification}
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-teal-500 rounded-full mr-3"></div>
+                {notification}
+              </div>
             </div>
           ))}
         </div>
       )}
       
       {/* Top Toolbar */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3 flex-shrink-0">
+      <div className="bg-white/80 backdrop-blur-xl border-b border-white/20 px-6 py-4 flex-shrink-0 shadow-sm">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-semibold text-gray-900">Summer Beach Trip</h1>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <Users className="h-4 w-4" />
-              <span>{collaborators.length} collaborators</span>
-              <span>•</span>
-              <span>Last updated {formatTimeAgo(cards[0]?.createdAt || new Date())}</span>
-            </div>
-                         <div className="flex items-center space-x-1">
-               {collaborators.map((collaborator) => (
-                <div
-                  key={collaborator.name}
-                  className={`w-6 h-6 rounded-full ${collaborator.color} flex items-center justify-center relative`}
-                  title={`${collaborator.name} ${collaborator.online ? '(online)' : '(offline)'}`}
-                >
-                  <span className="text-white text-xs font-medium">
-                    {collaborator.name.charAt(0)}
-                  </span>
-                  {collaborator.online && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border border-white"></div>
-                  )}
+                      <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                  <MapPin className="h-5 w-5 text-white" />
                 </div>
-              ))}
-            </div>
+                <h1 className="text-xl font-semibold text-gray-900">Summer Beach Trip</h1>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
+                <Users className="h-4 w-4" />
+                <span>{collaborators.length} collaborators</span>
+                <span>•</span>
+                <span>Last updated {formatTimeAgo(cards[0]?.createdAt || new Date())}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                {collaborators.map((collaborator) => (
+                  <div
+                    key={collaborator.name}
+                    className={`w-6 h-6 rounded-full ${collaborator.color} flex items-center justify-center relative`}
+                    title={`${collaborator.name} ${collaborator.online ? '(online)' : '(offline)'}`}
+                  >
+                    <span className="text-white text-xs font-medium">
+                      {collaborator.name.charAt(0)}
+                    </span>
+                    {collaborator.online && (
+                      <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-400 rounded-full border border-white"></div>
+                    )}
+                  </div>
+                ))}
+              </div>
           </div>
           
           <div className="flex items-center space-x-3">
@@ -567,23 +575,23 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
                 placeholder="Search cards..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                className="pl-10 pr-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/50 backdrop-blur-sm"
               />
             </div>
             
             <button 
-              className={`p-2 rounded-lg transition-colors ${showChat ? 'text-teal-600 bg-teal-50' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`p-2 rounded-lg transition-all ${showChat ? 'text-teal-600 bg-teal-50 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
               onClick={() => setShowChat(!showChat)}
             >
               <MessageSquare className="h-5 w-5" />
             </button>
             
-            <button className="p-2 text-gray-400 hover:text-gray-600">
+            <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
               <Share2 className="h-5 w-5" />
             </button>
             
             <button 
-              className="p-2 text-gray-400 hover:text-gray-600"
+              className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
               title="Keyboard shortcuts: Delete (delete card), Escape (deselect), Ctrl+N (add card), Ctrl+F (search)"
             >
               <Settings className="h-5 w-5" />
@@ -597,7 +605,7 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
         {/* Canvas Area */}
         <div 
           ref={canvasRef}
-          className="absolute inset-0 bg-white select-none"
+          className="absolute inset-0 bg-white/60 backdrop-blur-sm select-none"
           style={{ cursor: isDragging ? 'grabbing' : 'default' }}
         >
           {/* Cards */}
@@ -755,13 +763,13 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
           <div className="relative">
             <button
               onClick={() => setShowAddMenu(!showAddMenu)}
-              className="bg-teal-600 hover:bg-teal-700 text-white p-4 rounded-full shadow-lg transition-all duration-200"
+              className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110"
             >
               <Plus className="h-6 w-6" />
             </button>
             
             {showAddMenu && (
-              <div className="absolute bottom-full right-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2 min-w-48">
+              <div className="absolute bottom-full right-0 mb-2 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-white/20 p-2 min-w-48">
                 <div className="text-xs font-medium text-gray-500 px-3 py-2">Add to board</div>
                 <button
                   onClick={() => handleAddCard('destination')}
@@ -805,12 +813,12 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
       </div>
 
       {/* Bottom Panel - Chat & AI Assistant */}
-      <div className="bg-white border-t border-gray-200 flex-shrink-0" style={{ height: '200px' }}>
+      <div className="bg-white/80 backdrop-blur-xl border-t border-white/20 flex-shrink-0 shadow-sm" style={{ height: '200px' }}>
         <div className="flex h-full">
           {/* Chat Panel */}
           {showChat && (
-            <div className="flex-1 border-r border-gray-200 flex flex-col">
-              <div className="p-3 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+            <div className="flex-1 border-r border-gray-100 flex flex-col">
+              <div className="p-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                 <h3 className="font-semibold text-gray-900">Chat</h3>
                 <button
                   onClick={() => setShowChat(false)}
@@ -839,7 +847,7 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
                     ))}
                   </div>
                 </div>
-                <div className="p-3 border-t border-gray-200 flex-shrink-0">
+                <div className="p-3 border-t border-gray-100 flex-shrink-0">
                   <div className="flex space-x-2">
                     <input
                       type="text"
@@ -849,11 +857,11 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
                       placeholder="Type a message..."
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+                      className="flex-1 px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 bg-white/50 backdrop-blur-sm"
                     />
                     <button
                       onClick={handleSendMessage}
-                      className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                      className="px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl hover:from-teal-600 hover:to-cyan-600 transition-all duration-200 shadow-sm"
                     >
                       <Send className="h-4 w-4" />
                     </button>
@@ -866,7 +874,7 @@ export default function PlanningBoardPage({ params }: { params: Promise<{ id: st
           {/* AI Assistant Panel */}
           {showAI && (
             <div className={`${showChat ? 'w-72' : 'flex-1'} flex flex-col`}>
-              <div className="p-3 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+              <div className="p-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                 <h3 className="font-semibold text-gray-900">AI Assistant</h3>
                 <button
                   onClick={() => setShowAI(false)}

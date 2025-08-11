@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock, User, X } from 'lucide-react'
+import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext'
 import DatePicker from './DatePicker'
 
 interface SignupOverlayProps {
@@ -11,6 +12,7 @@ interface SignupOverlayProps {
 }
 
 export default function SignupOverlay({ isOpen, onClose, onSuccess }: SignupOverlayProps) {
+  const { signUp } = useSupabaseAuth()
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -22,6 +24,8 @@ export default function SignupOverlay({ isOpen, onClose, onSuccess }: SignupOver
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -39,25 +43,53 @@ export default function SignupOverlay({ isOpen, onClose, onSuccess }: SignupOver
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError('')
+    setSuccess('')
     
-    // Implement registration
-    console.log('Signup attempt:', formData)
-    
-    // Simulate API call
-    setTimeout(() => {
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match')
       setIsLoading(false)
-      onSuccess?.(formData)
-      onClose()
-      // Reset form
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        birthDate: ''
-      })
-    }, 1000)
+      return
+    }
+    
+    // Validate password length
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long')
+      setIsLoading(false)
+      return
+    }
+    
+    try {
+      // Sign up the user
+      const { error } = await signUp(formData.email, formData.password, formData.firstName, formData.lastName)
+      
+      if (error) {
+        console.error('Signup error:', error)
+        setError(error.message || 'Failed to create account')
+      } else {
+        setSuccess('Account created successfully! Please check your email to confirm your account.')
+        onSuccess?.(formData)
+        
+        // Reset form and close after delay
+        setTimeout(() => {
+          onClose()
+          setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            birthDate: ''
+          })
+        }, 2000)
+      }
+    } catch (error) {
+      console.error('Signup error:', error)
+      setError('An unexpected error occurred')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (!isOpen) return null
@@ -101,6 +133,17 @@ export default function SignupOverlay({ isOpen, onClose, onSuccess }: SignupOver
          
          {/* Form */}
          <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-4">
+           {error && (
+             <div className="p-3 bg-red-500/20 border border-red-400/30 rounded-lg">
+               <p className="text-sm text-red-300">{error}</p>
+             </div>
+           )}
+           
+           {success && (
+             <div className="p-3 bg-green-500/20 border border-green-400/30 rounded-lg">
+               <p className="text-sm text-green-300">{success}</p>
+             </div>
+           )}
            <div className="grid grid-cols-2 gap-3">
              <div>
                <label htmlFor="firstName" className="block text-xs font-medium text-white/90 mb-1">

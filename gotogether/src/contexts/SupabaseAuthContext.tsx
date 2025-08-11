@@ -62,23 +62,6 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
       },
     })
 
-    if (!error) {
-      // Create user profile in users table
-      const { error: profileError } = await supabase
-        .from('users')
-        .insert([
-          {
-            email,
-            first_name: firstName,
-            last_name: lastName,
-          },
-        ])
-
-      if (profileError) {
-        console.error('Error creating user profile:', profileError)
-      }
-    }
-
     return { error }
   }
 

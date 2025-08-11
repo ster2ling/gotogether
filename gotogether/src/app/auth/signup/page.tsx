@@ -21,6 +21,8 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -32,6 +34,22 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setError('')
+    setSuccess('')
+    
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match')
+      setIsLoading(false)
+      return
+    }
+    
+    // Validate password length
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long')
+      setIsLoading(false)
+      return
+    }
     
     try {
       // Sign up the user
@@ -39,19 +57,23 @@ export default function SignupPage() {
       
       if (error) {
         console.error('Signup error:', error)
-        // Handle error (you might want to show an error message to the user)
+        setError(error.message || 'Failed to create account')
       } else {
-        // Redirect to intended destination or dashboard
-        const redirectPath = sessionStorage.getItem('redirectAfterSignup')
-        if (redirectPath) {
-          sessionStorage.removeItem('redirectAfterSignup')
-          router.push(redirectPath)
-        } else {
-          router.push('/dashboard')
-        }
+        setSuccess('Account created successfully! Please check your email to confirm your account.')
+        // Don't redirect immediately - let user see success message
+        setTimeout(() => {
+          const redirectPath = sessionStorage.getItem('redirectAfterSignup')
+          if (redirectPath) {
+            sessionStorage.removeItem('redirectAfterSignup')
+            router.push(redirectPath)
+          } else {
+            router.push('/dashboard')
+          }
+        }, 2000)
       }
     } catch (error) {
       console.error('Signup error:', error)
+      setError('An unexpected error occurred')
     } finally {
       setIsLoading(false)
     }
@@ -85,6 +107,18 @@ export default function SignupPage() {
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.05)'
           }}
         >
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600">{error}</p>
+            </div>
+          )}
+          
+          {success && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-600">{success}</p>
+            </div>
+          )}
+          
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">

@@ -8,12 +8,13 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
-  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: AuthError | Error | null }>
+  signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: AuthError | Error | null; message?: string }>
   signIn: (email: string, password: string) => Promise<{ error: AuthError | Error | null }>
   signInWithGoogle: () => Promise<{ error: AuthError | Error | null }>
   signInWithGithub: () => Promise<{ error: AuthError | Error | null }>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<{ error: AuthError | Error | null }>
+  resendConfirmationEmail: (email: string) => Promise<{ error: AuthError | Error | null }>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -53,7 +54,7 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
       return { error: new Error('Supabase client not initialized') }
     }
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -61,8 +62,17 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
           first_name: firstName,
           last_name: lastName,
         },
+        emailRedirectTo: `${window.location.origin}/auth/callback`
       },
     })
+
+    // If signup successful but email confirmation required
+    if (!error && data.user && !data.session) {
+      return { 
+        error: null, 
+        message: 'Please check your email to confirm your account before signing in.' 
+      }
+    }
 
     return { error }
   }
@@ -127,6 +137,22 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     return { error }
   }
 
+  const resendConfirmationEmail = async (email: string) => {
+    if (!supabase) {
+      return { error: new Error('Supabase client not initialized') }
+    }
+
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+
+    return { error }
+  }
+
   const value = {
     user,
     session,
@@ -137,6 +163,7 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     signInWithGithub,
     signOut,
     resetPassword,
+    resendConfirmationEmail,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

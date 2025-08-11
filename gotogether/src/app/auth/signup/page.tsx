@@ -54,13 +54,13 @@ export default function SignupPage() {
     
     try {
       // Sign up the user
-      const { error } = await signUp(formData.email, formData.password, formData.firstName, formData.lastName)
+      const { error, message } = await signUp(formData.email, formData.password, formData.firstName, formData.lastName)
       
       if (error) {
         console.error('Signup error:', error)
         setError(error.message || 'Failed to create account')
       } else {
-        setSuccess('Account created successfully! Please check your email to confirm your account.')
+        setSuccess(message || 'Account created successfully! Please check your email to confirm your account.')
         // Don't redirect immediately - let user see success message
         setTimeout(() => {
           const redirectPath = sessionStorage.getItem('redirectAfterSignup')

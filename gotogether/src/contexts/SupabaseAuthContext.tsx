@@ -10,6 +10,8 @@ interface AuthContextType {
   loading: boolean
   signUp: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: AuthError | Error | null }>
   signIn: (email: string, password: string) => Promise<{ error: AuthError | Error | null }>
+  signInWithGoogle: () => Promise<{ error: AuthError | Error | null }>
+  signInWithGithub: () => Promise<{ error: AuthError | Error | null }>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<{ error: AuthError | Error | null }>
 }
@@ -78,6 +80,36 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     return { error }
   }
 
+  const signInWithGoogle = async () => {
+    if (!supabase) {
+      return { error: new Error('Supabase client not initialized') }
+    }
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+
+    return { error }
+  }
+
+  const signInWithGithub = async () => {
+    if (!supabase) {
+      return { error: new Error('Supabase client not initialized') }
+    }
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+
+    return { error }
+  }
+
   const signOut = async () => {
     if (!supabase) return
     await supabase.auth.signOut()
@@ -101,6 +133,8 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
     loading,
     signUp,
     signIn,
+    signInWithGoogle,
+    signInWithGithub,
     signOut,
     resetPassword,
   }

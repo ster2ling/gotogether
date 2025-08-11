@@ -3,12 +3,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Chrome, Github } from 'lucide-react'
 import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext'
 import DatePicker from '@/components/DatePicker'
 
 export default function SignupPage() {
-  const { signUp } = useSupabaseAuth()
+  const { signUp, signInWithGoogle, signInWithGithub } = useSupabaseAuth()
   const router = useRouter()
   const [formData, setFormData] = useState({
     firstName: '',
@@ -23,6 +23,7 @@ export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [oauthLoading, setOauthLoading] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -76,6 +77,40 @@ export default function SignupPage() {
       setError('An unexpected error occurred')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setOauthLoading('google')
+    setError('')
+    
+    try {
+      const { error } = await signInWithGoogle()
+      if (error) {
+        setError(error.message || 'Failed to sign in with Google')
+      }
+    } catch (error) {
+      console.error('Google sign in error:', error)
+      setError('Failed to sign in with Google')
+    } finally {
+      setOauthLoading('')
+    }
+  }
+
+  const handleGithubSignIn = async () => {
+    setOauthLoading('github')
+    setError('')
+    
+    try {
+      const { error } = await signInWithGithub()
+      if (error) {
+        setError(error.message || 'Failed to sign in with GitHub')
+      }
+    } catch (error) {
+      console.error('GitHub sign in error:', error)
+      setError('Failed to sign in with GitHub')
+    } finally {
+      setOauthLoading('')
     }
   }
 
@@ -282,6 +317,39 @@ export default function SignupPage() {
             >
               {isLoading ? 'Creating account...' : 'Create account'}
             </button>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+
+            {/* OAuth Buttons */}
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={oauthLoading === 'google'}
+                className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Chrome className="h-5 w-5" />
+                {oauthLoading === 'google' ? 'Signing in...' : 'Continue with Google'}
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleGithubSignIn}
+                disabled={oauthLoading === 'github'}
+                className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-xl text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Github className="h-5 w-5" />
+                {oauthLoading === 'github' ? 'Signing in...' : 'Continue with GitHub'}
+              </button>
+            </div>
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
